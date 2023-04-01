@@ -1,0 +1,11 @@
+<tool id='gaussian' name='gaussian'>
+  <command interpreter='bash'>workflow_launcher.sh</command>
+  <inputs>
+    <section name='files' type='section' title='Gaussian input files' expanded='true'>
+      <param name='inp' label='Molecular definition' type='text' value='o2.inp' width='50%' help='Guassian .inp format'></param>
+    </section>
+    <section_name='g16' type='section' title='Gaussian run parameters' expanded='true'>
+      <param name='ram' label='RAM' type='integer' min='20' max='384' value='100' width='50%' help='Gaussian RAM (will add 20GB for overhead'></param>
+    </section>
+  </inputs>
+</tool>
