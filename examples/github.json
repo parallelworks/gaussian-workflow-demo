@@ -3,6 +3,6 @@
     "branch": "main",
     "dir": ".",
     "xml": "workflow.xml",
-    "thumbnail": "g16.png",
+    "thumbnail": "examples/g16.png",
     "readme": "README.md"
 }
