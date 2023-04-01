@@ -1,0 +1,12 @@
+#P RHF cc-pVQZ punch=(NaturalOrbitals) pop=NO scf=tight 
+
+Gaussian Test o2
+SINGLET DELTA Dunning cc-pVQZ DIOXYGEN
+
+ 0 1
+ O 
+ O 1 R
+
+R 1.220
+
+
