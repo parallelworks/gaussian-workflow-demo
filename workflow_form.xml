@@ -9,7 +9,5 @@
     </section>
   </inputs>
   <outputs>
-    <data name='csv' format='csv' label='${casename}-CSV'></data>
-    <data name='html' format='html' label='${casename}-HTML'></data>
   </outputs>
 </tool>
