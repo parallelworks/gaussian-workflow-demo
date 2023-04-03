@@ -10,5 +10,7 @@
     <param name='casename' label='Case Name' type='text' value='Gaussian TEST' width='30%_none'></param>
   </inputs>
   <outputs>
+    <data name='csv' format='csv' label='${casename}-CSV'></data>
+    <data name='html' format='html' label='${casename}-HTML'></data>
   </outputs>
 </tool>
