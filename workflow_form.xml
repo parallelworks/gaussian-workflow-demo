@@ -2,15 +2,13 @@
   <command interpreter='bash'>workflow_launcher.sh</command>
   <inputs>
     <section name='files' type='section' title='Gaussian input files' expanded='true'>
-      <param name='npart' label='Number of Particles' type='text' value='25:50:25' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
-      <param name='steps' label='Timesteps' type='text' value='3000:6000:3000' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
-      <param name='mass' label='Particle Mass' type='text' value='0.01:0.02:0.01' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
-      <param name='trsnaps' label='Frames' type='text' value='5:10:5' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
+      <param name='inp' label='Molecular definition' type='text' value='./examples/o2.inp' width='50%' help='Gaussian .inp format' argument='input'></param>
+      <param name='chk_if_true' type='boolean' truevalue='Yes' falsevalue='No' checked='false' label='Checkpoint' help='Assumes presence of .chk file in same directory as .inp' width='50%_none' float='right'> </param>
     </section>
-    <param name='casename' label='Case Name' type='text' value='Gaussian TEST' width='30%_none'></param>
+    <section name='g16' type='section' title='Gaussian run parameters' expanded='true'>
+      <param name='ram' label='RAM' type='integer' min='20' max='384' value='80' width='50%' help='Gaussian RAM (will add 20GB for overhead'></param>
+      <param name='cpu' label='CPU' type='integer' min='1' max='128' value='16' width='50%' help='Gaussian number of CPUs'></param>
+      <param name='gpu_if_true' type='boolean' truevalue='Yes' falsevalue='No' checked='false' label='GPU' help='Will send to GPU node' width='50%_none' float='right'> </param>
+    </section>
   </inputs>
-  <outputs>
-    <data name='csv' format='csv' label='${casename}-CSV'></data>
-    <data name='html' format='html' label='${casename}-HTML'></data>
-  </outputs>
 </tool>
