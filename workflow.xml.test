@@ -1,7 +1,7 @@
 <tool id='nyu1_mdlite' name='nyu1_mdlite'>
   <command interpreter='bash'>workflow_form_launcher.sh</command>
   <inputs>
-    <section name='geometry' type='section' title='Runtime Parameters' expanded='true'>
+    <section name='geometry' type='section' title='Runtime Parameters TEST' expanded='true'>
       <param name='npart' label='Number of Particles' type='text' value='25:50:25' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
       <param name='steps' label='Timesteps' type='text' value='3000:6000:3000' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
       <param name='mass' label='Particle Mass' type='text' value='0.01:0.02:0.01' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
