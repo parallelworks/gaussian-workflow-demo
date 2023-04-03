@@ -1,16 +1,16 @@
 <tool id='gaussian' name='gaussian'>
   <command interpreter='bash'>workflow_launcher.sh</command>
   <inputs>
-    <section name='files' type='section' title='Gaussian input files' expanded='true'>
-      <param name='inp' label='Molecular definition' type='text' value='o2.inp' width='50%' help='Guassian .inp format'></param>
+    <section name='geometry' type='section' title='Runtime Parameters TEST TEST' expanded='true'>
+      <param name='npart' label='Number of Particles' type='text' value='25:50:25' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
+      <param name='steps' label='Timesteps' type='text' value='3000:6000:3000' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
+      <param name='mass' label='Particle Mass' type='text' value='0.01:0.02:0.01' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
+      <param name='trsnaps' label='Frames' type='text' value='5:10:5' width='50%' help='Whitespace delimited or range/step (e.g. min:max:step)' argument='input'></param>
     </section>
-    <section_name='g16' type='section' title='Gaussian run parameters' expanded='true'>
-      <param name='ram' label='RAM' type='integer' min='20' max='384' value='100' width='50%' help='Gaussian RAM (will add 20GB for overhead'></param>
-      <param name='cpu' label='CPU' type='integer' min='1' max='128' value='100' width='50%' help='Gaussian number of CPUs'></param>
-    </section>
+    <param name='casename' label='Case Name' type='text' value='MD-Lite-Sweep' width='30%_none'></param>
   </inputs>
   <outputs>
-    <data name='log' format='out' label='std.out'></data>
+    <data name='csv' format='csv' label='${casename}-CSV'></data>
+    <data name='html' format='html' label='${casename}-HTML'></data>
   </outputs>
 </tool>
-
