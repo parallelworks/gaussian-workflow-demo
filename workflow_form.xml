@@ -10,6 +10,7 @@
     </section>
   </inputs>
   <outputs>
+    <data name='log' format='out' label='std.out'></data>
   </outputs>
 </tool>
 
