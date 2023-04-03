@@ -2,7 +2,7 @@
     "repo": "https://github.com/parallelworks/gaussian-workflow-demo.git",
     "branch": "main",
     "dir": ".",
-    "xml": "workflow.xml",
+    "xml": "workflow_form.xml",
     "thumbnail": "examples/g16.png",
     "readme": "README.md"
 }
