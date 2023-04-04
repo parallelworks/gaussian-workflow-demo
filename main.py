@@ -56,6 +56,14 @@ inp_file_list=tmp_str.split('___')
 #=====================================
 print("Configuring Parsl...")
 
+# Original config
+print(config)
+
+# Make changes to config
+config.executors[0].worker_debug=False
+config.executors[0].provider.mem_per_node=80
+
+# Modified config
 print(config)
 
 parsl.load(config)
