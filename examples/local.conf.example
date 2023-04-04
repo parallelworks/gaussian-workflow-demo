@@ -11,7 +11,7 @@
 #====================
 
 export CONDA_DIR=/pw/.miniconda3/
-export CONDA_ENV=parsl-1.2
+export CONDA_ENV=gaussian
 export LOCAL_CONDA_YAML="./requirements/conda_env_local.yaml"
 export INSTALL_CONDA=true
 
