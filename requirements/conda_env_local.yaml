@@ -4,7 +4,7 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - parsl=1.2.0
+  - parsl
   - sqlalchemy
   - sqlalchemy-utils
 
