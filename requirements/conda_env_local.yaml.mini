@@ -1,0 +1,10 @@
+name: gaussian
+channels:
+  - anaconda
+  - defaults
+  - conda-forge
+dependencies:
+  - parsl
+  - sqlalchemy
+  - sqlalchemy-utils
+
