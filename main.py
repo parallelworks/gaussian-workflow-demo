@@ -55,6 +55,9 @@ inp_file_list=tmp_str.split('___')
 # Step 2: Configure Parsl
 #=====================================
 print("Configuring Parsl...")
+
+print(config)
+
 parsl.load(config)
 print("Parsl config loaded.")
 
