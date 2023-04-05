@@ -38,7 +38,6 @@ def read_args():
         if arg.startswith(("-", "--")):
             parser.add_argument(arg)
     pwargs=vars(parser.parse_args())
-    print(pwargs)
     return pwargs
 
 # Get any command line arguments
@@ -60,8 +59,8 @@ print("Configuring Parsl...")
 print(config)
 
 # Make changes to config
-config.executors[0].worker_debug=False
-config.executors[0].provider.mem_per_node=80
+#config.executors[0].worker_debug=False
+config.executors[0].provider.mem_per_node=args['ram']
 
 # Modified config
 print(config)
