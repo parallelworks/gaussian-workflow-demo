@@ -47,8 +47,8 @@ job_number = args['job_number']
 print(args)
 print(job_number)
 
-tmp_str=args['inp']
-inp_file_list=tmp_str.split('___')
+inp_file_list=args['inp'].split('___')
+print(inp_file_list)
 
 #=====================================
 # Step 2: Configure Parsl
@@ -56,7 +56,7 @@ inp_file_list=tmp_str.split('___')
 print("Configuring Parsl...")
 
 # Original config
-print(config)
+#print(config)
 
 # Make changes to config
 #config.executors[0].worker_debug=False
@@ -68,7 +68,7 @@ else:
 	config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
 # Modified config
-print(config)
+#print(config)
 
 parsl.load(config)
 print("Parsl config loaded.")
@@ -109,11 +109,10 @@ print("Defining Parsl workflow apps...")
 def md_run(cpu, ram, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     hostname
-    echo run_cpu
-    echo run_ram
-    #mkdir -p {outdir}
-    #cd {outdir}
-    #{srcdir}/mdlite/runMD.sh "{runopt}" metric.out trj.out
+    echo CPU {run_cpu}
+    echo RAM {run_ram}
+    mkdir -p {outdir}
+    cd {outdir}
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
