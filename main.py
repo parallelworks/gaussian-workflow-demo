@@ -138,7 +138,7 @@ md_run_fut = []
 local_dir = os.getcwd()
 remote_dir = exec_conf["cluster1"]['RUN_DIR']
 
-for inp, ii in enumerate(inp_file_list):
+for ii, inp in enumerate(inp_file_list):
 
     print("In loop")
     print(inp)
