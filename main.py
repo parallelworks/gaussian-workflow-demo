@@ -155,7 +155,7 @@ for ii, inp in enumerate(inp_file_list):
         md_run(
             cpu = args['cpu'],
 	    ram = args['ram'],
-            inp = inp
+            inp = inp,
             inputs = [],
             outputs = [],
             # Any files in outputs directory at end of app are rsynced back
