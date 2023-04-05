@@ -106,7 +106,7 @@ print("Defining Parsl workflow apps...")
 # below).
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def md_run(cpu, ram, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def md_run(cpu, ram, inp, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
@@ -117,7 +117,7 @@ def md_run(cpu, ram, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inputs[0].local_path
+        inp_file = inp
     )
 
 print("Done defining Parsl workflow apps.")
@@ -155,19 +155,9 @@ for ii, inp in enumerate(inp_file_list):
         md_run(
             cpu = args['cpu'],
 	    ram = args['ram'],
-            inputs = [
-                PWFile(
-                    # Rsync with "copy dir by name" no trailing slash convention
-                    url = 'file://usercontainer/'+inp,
-                    local_path = inp
-                )
-            ],
-            outputs = [
-                PWFile(
-                    url = 'file://usercontainer/'+local_dir+'/results/'+case_dir,
-                    local_path = remote_dir+'/'+case_dir+'/'
-                )
-            ],
+            inp = inp
+            inputs = [],
+            outputs = [],
             # Any files in outputs directory at end of app are rsynced back
             stdout = remote_dir+'/'+case_dir+'/std.out',
             stderr = remote_dir+'/'+case_dir+'/std.err'
