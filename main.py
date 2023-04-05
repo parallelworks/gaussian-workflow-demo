@@ -108,17 +108,16 @@ print("Defining Parsl workflow apps...")
 @bash_app(executors=['cluster1'])
 def md_run(cpu, ram, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
-    hostname
-    echo CPU {run_cpu}
-    echo RAM {run_ram}
-    echo inp_file {inp_file}
-    mkdir -p {outdir}
-    cd {outdir}
+    module load gaussian
+    export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
+    mkdir -p $GAUSS_SCRDIR
+    which g16
+    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {inp_file}.log
+    rm -rf $GAUSS_SCRDIR
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inputs[0].local_path,
-        outdir = outputs[0].local_path
+        inp_file = inputs[0].local_path
     )
 
 print("Done defining Parsl workflow apps.")
@@ -137,6 +136,9 @@ print("Running workflow...")
 md_run_fut = []
 local_dir = os.getcwd()
 remote_dir = exec_conf["cluster1"]['RUN_DIR']
+
+print("local_dir "+local_dir)
+print("remote_dir "+remote_dir)
 
 for ii, inp in enumerate(inp_file_list):
 
@@ -157,7 +159,7 @@ for ii, inp in enumerate(inp_file_list):
                 PWFile(
                     # Rsync with "copy dir by name" no trailing slash convention
                     url = 'file://usercontainer/'+inp,
-                    local_path = remote_dir+'/'+case_dir+'/'
+                    local_path = inp
                 )
             ],
             outputs = [
