@@ -60,7 +60,12 @@ print(config)
 
 # Make changes to config
 #config.executors[0].worker_debug=False
-config.executors[0].provider.mem_per_node=args['ram']
+if args['ram'] == "0":
+	# Use all avail RAM on node
+	config.executors[0].provider.mem_per_node=args['ram']
+else:
+	# Add 20GB overhead to account for Gaussian binaries
+	config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
 # Modified config
 print(config)
