@@ -157,13 +157,13 @@ for ii, inp in enumerate(inp_file_list):
                 PWFile(
                     # Rsync with "copy dir by name" no trailing slash convention
                     url = 'file://usercontainer/'+inp,
-                    local_path = remote_dir+'/'+case_dir
+                    local_path = remote_dir+'/'+case_dir+'/'
                 )
             ],
             outputs = [
                 PWFile(
                     url = 'file://usercontainer/'+local_dir+'/results/'+case_dir,
-                    local_path = remote_dir+'/'+case_dir
+                    local_path = remote_dir+'/'+case_dir+'/'
                 )
             ],
             # Any files in outputs directory at end of app are rsynced back
