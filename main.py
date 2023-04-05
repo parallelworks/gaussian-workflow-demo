@@ -111,12 +111,13 @@ def md_run(cpu, ram, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16
     hostname
     echo CPU {run_cpu}
     echo RAM {run_ram}
+    echo inp_file {inp_file}
     mkdir -p {outdir}
     cd {outdir}
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        srcdir = inputs[0].local_path,
+        inp_file = inputs[0].local_path,
         outdir = outputs[0].local_path
     )
 
@@ -138,30 +139,36 @@ local_dir = os.getcwd()
 remote_dir = exec_conf["cluster1"]['RUN_DIR']
 
 for inp, ii in enumerate(inp_file_list):
+
+    print("In loop")
+    print(inp)
+    print(ii)
+
     # Define remote working (sub)dir for this case
     case_dir = "case_"+str(ii)
-    
+    print(case_dir)    
+
     # Run simulation
     md_run_fut.append(
         md_run(
-            args['cpu'],
-	    args['ram'],
+            cpu = args['cpu'],
+	    ram = args['ram'],
             inputs = [
                 PWFile(
                     # Rsync with "copy dir by name" no trailing slash convention
-                    url = 'file://usercontainer/'+local_dir,
+                    url = 'file://usercontainer/'+inp,
                     local_path = remote_dir+'/src'
                 )
             ],
             outputs = [
                 PWFile(
                     url = 'file://usercontainer/'+local_dir+'/results/'+case_dir,
-                    local_path = remote_dir+'/'+case_dir+'/md'
+                    local_path = remote_dir+'/'+case_dir+'/'
                 )
             ],
             # Any files in outputs directory at end of app are rsynced back
-            stdout = remote_dir+'/'+case_dir+'/md/std.out',
-            stderr = remote_dir+'/'+case_dir+'/md/std.err'
+            stdout = remote_dir+'/'+case_dir+'/std.out',
+            stderr = remote_dir+'/'+case_dir+'/std.err'
         )
     )
 
