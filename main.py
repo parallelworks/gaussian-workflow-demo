@@ -125,7 +125,7 @@ def md_run(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout'
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp.split('.')[0]
+        inp_file = inp.split('.')[0],
 	out_dir = outdir
     )
 
