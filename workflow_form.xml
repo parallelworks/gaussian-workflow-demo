@@ -8,7 +8,8 @@
     <section name='g16' type='section' title='Gaussian run parameters' expanded='true'>
       <param name='ram' label='RAM' type='integer' min='0' max='384' value='80' width='50%' help='Gaussian RAM (will add 20GB for overhead); 0 => all avail. RAM'></param>
       <param name='cpu' label='CPU' type='integer' min='1' max='128' value='16' width='50%' help='Gaussian number of CPUs'></param>
-      <param name='gpu_if_true' type='boolean' truevalue='Yes' falsevalue='No' checked='false' label='GPU' help='Will send to GPU node' width='50%_none' float='right'> </param>
+      <param name='partition' label='Cluster partition' type='text' value='test' width='50%' help='Compute partition to run on'></param>
+      <param name='num_gpu' label='Number of GPUs to use' type='integer' min='0' max='4' value='0' width='50%_none' float='right'> </param>
     </section>
   </inputs>
 </tool>
