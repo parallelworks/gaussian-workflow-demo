@@ -113,18 +113,20 @@ print("Defining Parsl workflow apps...")
 # below).
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def md_run(cpu, ram, inp, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def md_run(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
     mkdir -p $GAUSS_SCRDIR
+    mkdir -p {out_dir}
     which g16
-    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {inp_file}.log
+    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/{inp_file}.log
     rm -rf $GAUSS_SCRDIR
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp
+        inp_file = inp.split('.')[0]
+	out_dir = outdir
     )
 
 print("Done defining Parsl workflow apps.")
