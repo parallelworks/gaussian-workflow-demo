@@ -166,10 +166,7 @@ for ii, inp in enumerate(inp_file_list):
 	    ram = args['ram'],
             inp = inp,
             inputs = [],
-            outputs = [],
-            # Any files in outputs directory at end of app are rsynced back
-            stdout = remote_dir+'/'+case_dir+'/std.out',
-            stderr = remote_dir+'/'+case_dir+'/std.err'
+            outputs = []
         )
     )
 
