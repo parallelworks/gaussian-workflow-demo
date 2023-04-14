@@ -67,6 +67,13 @@ else:
 	# Add 20GB overhead to account for Gaussian binaries
 	config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
+condif.executors[0].provider.partition=args['partition']
+if args['partition'] == 'gpu':
+	# Add --gpus-per-node SLURM directive
+	config.executors[0].provider.scheduler_options='--gpus-per-node='+args['num_gpus']
+
+config.executors[0].provider.cores_per_node=args['cpu']
+
 # Modified config
 #print(config)
 
