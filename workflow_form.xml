@@ -2,7 +2,7 @@
   <command interpreter='bash'>workflow_launcher.sh</command>
   <inputs>
     <section name='files' type='section' title='Gaussian input files' expanded='true'>
-      <param name='inp' label='Molecular definition' type='data' format='inp' value='o2.inp' width='50%' help='Gaussian .inp format' argument='input'></param>
+      <param name='inp' label='Molecular definition' type='data' format='inp' value='o2.inp' width='50%' help='Gaussian .inp format'></param>
       <param name='chk_if_true' type='boolean' truevalue='Yes' falsevalue='No' checked='false' label='Checkpoint' help='Assumes presence of .chk file in same directory as .inp' width='50%_none' float='right'> </param>
     </section>
     <section name='g16' type='section' title='Gaussian run parameters' expanded='true'>
