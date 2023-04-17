@@ -116,16 +116,17 @@ print("Defining Parsl workflow apps...")
 def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
-    export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
+    bn=$(basename {inp_file} .inp)
+    export GAUSS_SCRDIR=/scratch/$USER/$bn
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file}.inp > {out_dir}/{inp_file}.log
+    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp.split('.')[0],
+        inp_file = inp
 	out_dir = outdir
     )
 
@@ -134,16 +135,17 @@ def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.r
 def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
-    export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
+    bn=$(basename {inp_file} .inp)
+    export GAUSS_SCRDIR=/scratch/$USER/$bn
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -y {inp_file}.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file}.inp > {out_dir}/{inp_file}.log
+    g16 -y $bn.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format( 
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp.split('.')[0],
+        inp_file = inp
         out_dir = outdir
     )
 
