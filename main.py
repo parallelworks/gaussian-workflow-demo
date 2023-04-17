@@ -126,7 +126,7 @@ def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.r
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp
+        inp_file = inp,
 	out_dir = outdir
     )
 
@@ -145,7 +145,7 @@ def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.ru
     '''.format( 
         run_cpu = cpu,
         run_ram = ram,
-        inp_file = inp
+        inp_file = inp,
         out_dir = outdir
     )
 
