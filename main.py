@@ -165,7 +165,7 @@ for ii, inp in enumerate(inp_file_list):
             cpu = args['cpu'],
 	    ram = args['ram'],
             inp = inp,
-            outdir = args['outdir']
+            outdir = args['outdir'],
             inputs = [],
             outputs = []
         )
