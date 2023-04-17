@@ -113,20 +113,38 @@ print("Defining Parsl workflow apps...")
 # below).
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def md_run(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/{inp_file}.log
+    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file}.inp > {out_dir}/{inp_file}.log
     rm -rf $GAUSS_SCRDIR
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
         inp_file = inp.split('.')[0],
 	out_dir = outdir
+    )
+
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['cluster1'])
+def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+    return '''
+    module load gaussian
+    export GAUSS_SCRDIR=/scratch/$USER/{inp_file}
+    mkdir -p $GAUSS_SCRDIR
+    mkdir -p {out_dir}
+    which g16
+    g16 -y {inp_file}.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file}.inp > {out_dir}/{inp_file}.log
+    rm -rf $GAUSS_SCRDIR
+    '''.format( 
+        run_cpu = cpu,
+        run_ram = ram,
+        inp_file = inp.split('.')[0],
+        out_dir = outdir
     )
 
 print("Done defining Parsl workflow apps.")
@@ -142,7 +160,7 @@ print("Running workflow...")
 #============================================================================
 # The empty list will store the futures of Parsl-parallelized apps. Set the local
 # and remote working directories for this app here.
-md_run_fut = []
+futures = []
 local_dir = os.getcwd()
 remote_dir = exec_conf["cluster1"]['RUN_DIR']
 
@@ -160,20 +178,32 @@ for ii, inp in enumerate(inp_file_list):
     print(case_dir)    
 
     # Run simulation
-    md_run_fut.append(
-        md_run(
-            cpu = args['cpu'],
-	    ram = args['ram'],
-            inp = inp,
-            outdir = args['outdir'],
-            inputs = [],
-            outputs = []
+    if args['chk_if_true'] == 'True':
+        futures.append(
+            g16_run_w_chkpt(
+                cpu = args['cpu'],
+	        ram = args['ram'],
+                inp = inp,
+                outdir = args['outdir'],
+                inputs = [],
+                outputs = []
+            )
         )
-    )
+    else:
+        futures.append(
+            g16_run_no_chkpt(
+                cpu = args['cpu'],
+                ram = args['ram'],
+                inp = inp,
+                outdir = args['outdir'],
+                inputs = [],
+                outputs = []
+            )
+        )
 
 # Call results for all app futures to require
 # execution to wait for all simulations to complete.
-for run in md_run_fut:
+for run in futures:
     run.result()
     
 print('Done with simulations.')
