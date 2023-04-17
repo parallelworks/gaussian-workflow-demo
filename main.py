@@ -62,7 +62,7 @@ print("Configuring Parsl...")
 #config.executors[0].worker_debug=False
 if args['ram'] == "0":
 	# Use all avail RAM on node
-	config.executors[0].provider.mem_per_node=args['ram']
+	config.executors[0].provider.mem_per_node=int(args['ram'])
 else:
 	# Add 20GB overhead to account for Gaussian binaries
 	config.executors[0].provider.mem_per_node=int(args['ram'])+20
@@ -72,7 +72,7 @@ if args['partition'] == 'gpu':
 	# Add --gpus-per-node SLURM directive
 	config.executors[0].provider.scheduler_options='--gpus-per-node='+args['num_gpus']
 
-config.executors[0].provider.cores_per_node=args['cpu']
+config.executors[0].provider.cores_per_node=int(args['cpu'])
 
 # Modified config
 #print(config)
