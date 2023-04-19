@@ -74,9 +74,9 @@ if args['partition'] == 'gpu':
 
 # Blank default Gaussian GPU option
 gpu_opt = " "
-if int(args['num_gpus']) > 0:
+ngpu=int(args['num_gpu'])
+if ngpu > 0:
     # Build the Gaussian GPU option flag
-    ngpu=int(args['num_gpus'])
     gpu_opt = "-g=\"0-"+str(ngpu-1)+"=0-"+str(ngpu-1)+"\""
 
 config.executors[0].provider.cores_per_node=int(args['cpu'])
