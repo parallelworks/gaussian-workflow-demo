@@ -68,9 +68,14 @@ else:
 	config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
 config.executors[0].provider.partition=args['partition']
+gpu_opt = " "
 if args['partition'] == 'gpu':
 	# Add --gpus-per-node SLURM directive
-	config.executors[0].provider.scheduler_options='--gpus-per-node='+args['num_gpus']
+	config.executors[0].provider.scheduler_options = '--gpus-per-node='+args['num_gpus']
+
+	# Build the Gaussian GPU option flag
+        ngpu=int(args['num_gpus'])
+        gpu_opt = "-g=\"0-"+str(ngpu-1)+"=0-"+str(ngpu-1)+"\""
 
 config.executors[0].provider.cores_per_node=int(args['cpu'])
 
@@ -113,7 +118,7 @@ print("Defining Parsl workflow apps...")
 # below).
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def g16_run_no_chkpt(cpu, ram, inp, gpu, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     bn=$(basename {inp_file} .inp)
@@ -121,18 +126,19 @@ def g16_run_no_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.r
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
+    g16 -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format(
         run_cpu = cpu,
         run_ram = ram,
+        gpu_opt = gpu,
         inp_file = inp,
 	out_dir = outdir
     )
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def g16_run_w_chkpt(cpu, ram, gpu, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     bn=$(basename {inp_file} .inp)
@@ -140,11 +146,12 @@ def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.ru
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -y=$bn.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
+    g16 -y=$bn.chk -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format( 
         run_cpu = cpu,
         run_ram = ram,
+        gpu_opt = gpu,
         inp_file = inp,
         out_dir = outdir
     )
@@ -187,6 +194,7 @@ for ii, inp in enumerate(inp_file_list):
             g16_run_w_chkpt(
                 cpu = (int(args['cpu']) - 1),
 	        ram = int(args['ram']),
+		gpu = gpu_opt,
                 inp = inp,
                 outdir = args['outdir'],
                 inputs = [],
@@ -198,6 +206,7 @@ for ii, inp in enumerate(inp_file_list):
             g16_run_no_chkpt(
                 cpu = (int(args['cpu']) - 1),
                 ram = int(args['ram']),
+                gpu = gpu_opt,
                 inp = inp,
                 outdir = args['outdir'],
                 inputs = [],
