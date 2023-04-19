@@ -140,7 +140,7 @@ def g16_run_w_chkpt(cpu, ram, inp, outdir, inputs=[], outputs=[], stdout='g16.ru
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
-    g16 -y $bn.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
+    g16 -y=$bn.chk -m={run_ram}GB -c="0-{run_cpu}" < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format( 
         run_cpu = cpu,
