@@ -70,7 +70,7 @@ else:
 config.executors[0].provider.partition=args['partition']
 if args['partition'] == 'gpu':
     # Add --gpus-per-node SLURM directive
-    config.executors[0].provider.scheduler_options = '--gpus-per-node='+args['num_gpus']
+    config.executors[0].provider.scheduler_options = '--gpus-per-node='+args['num_gpu']
 
 # Blank default Gaussian GPU option
 gpu_opt = " "
