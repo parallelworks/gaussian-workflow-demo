@@ -68,11 +68,13 @@ else:
 	config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
 config.executors[0].provider.partition=args['partition']
-gpu_opt = " "
 if args['partition'] == 'gpu':
 	# Add --gpus-per-node SLURM directive
 	config.executors[0].provider.scheduler_options = '--gpus-per-node='+args['num_gpus']
 
+# Blank default Gaussian GPU option
+gpu_opt = " "
+if int(args['num_gpus']) > 0:
 	# Build the Gaussian GPU option flag
         ngpu=int(args['num_gpus'])
         gpu_opt = "-g=\"0-"+str(ngpu-1)+"=0-"+str(ngpu-1)+"\""
