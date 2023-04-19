@@ -180,11 +180,13 @@ for ii, inp in enumerate(inp_file_list):
     print(case_dir)    
 
     # Run simulation
+    # Subtract 1 from CPU because g16 starts counting
+    # at 0 instead of 1 but SLURM counts starting at 1.
     if args['chk_if_true'] == 'True':
         futures.append(
             g16_run_w_chkpt(
-                cpu = args['cpu'],
-	        ram = args['ram'],
+                cpu = (int(args['cpu']) - 1),
+	        ram = int(args['ram']),
                 inp = inp,
                 outdir = args['outdir'],
                 inputs = [],
@@ -194,8 +196,8 @@ for ii, inp in enumerate(inp_file_list):
     else:
         futures.append(
             g16_run_no_chkpt(
-                cpu = args['cpu'],
-                ram = args['ram'],
+                cpu = (int(args['cpu']) - 1),
+                ram = int(args['ram']),
                 inp = inp,
                 outdir = args['outdir'],
                 inputs = [],
