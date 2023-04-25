@@ -79,7 +79,11 @@ if ngpu > 0:
     # Build the Gaussian GPU option flag
     gpu_opt = "-g=\"0-"+str(ngpu-1)+"=0-"+str(ngpu-1)+"\""
 
+# Set partition
 config.executors[0].provider.cores_per_node=int(args['cpu'])
+
+# Overwrite scheduler_directives with AECM options
+config.executors[0].provider.scheduler_options='\n#SBATCH --get-user-env\n#SBATCH --export=ALL\n'
 
 # Modified config
 print('================Parsl Config=================')
