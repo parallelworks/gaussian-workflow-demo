@@ -82,7 +82,9 @@ if ngpu > 0:
 config.executors[0].provider.cores_per_node=int(args['cpu'])
 
 # Modified config
-#print(config)
+print('================Parsl Config=================')
+print(config)
+print('=============================================')
 
 parsl.load(config)
 print("Parsl config loaded.")
