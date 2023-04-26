@@ -67,6 +67,7 @@ else:
     # Add 20GB overhead to account for Gaussian binaries
     config.executors[0].provider.mem_per_node=int(args['ram'])+20
 
+# Set partition
 config.executors[0].provider.partition=args['partition']
 
 # Blank default Gaussian GPU option
@@ -79,11 +80,13 @@ if ngpu > 0:
     # Build the Gaussian GPU option flag
     gpu_opt = "-g=\"0-"+str(ngpu-1)+"=0-"+str(ngpu-1)+"\""
 
-# Set partition
+# Set cores_per_node
 config.executors[0].provider.cores_per_node=int(args['cpu'])
 
 # Overwrite scheduler_directives with AECM options
-config.executors[0].provider.scheduler_options='\n#SBATCH --get-user-env\n#SBATCH --export=ALL\n'
+# Force partition here - TESTING
+config.executors[0].provider.scheduler_options='\n#SBATCH --get-user-env\n#SBATCH --export=ALL\n#SBATCH --partition '+args['partition']+'\n'
+
 
 # Modified config
 print('================Parsl Config=================')
@@ -134,6 +137,7 @@ def g16_run_no_chkpt(cpu, ram, inp, gpu, outdir, inputs=[], outputs=[], stdout='
     mkdir -p $GAUSS_SCRDIR
     mkdir -p {out_dir}
     which g16
+    env
     g16 -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < {inp_file} > {out_dir}/$bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format(
