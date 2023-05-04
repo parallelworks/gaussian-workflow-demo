@@ -191,8 +191,8 @@ for ii, inp in enumerate(inp_file_list):
             job = args['job_number'],
             inputs = [],
             outputs = [],
-            stdout = args['prefix']"/"+inp+"."+args['job_number']+'.stdout',
-            stderr = args['prefix']"/"+inp+"."+args['job_number']+'.stderr'
+            stdout = args['prefix']+"/"+inp+"."+args['job_number']+'.stdout',
+            stderr = args['prefix']+"/"+inp+"."+args['job_number']+'.stderr'
         )
     )
 
