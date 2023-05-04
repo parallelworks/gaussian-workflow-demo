@@ -127,46 +127,31 @@ print("Defining Parsl workflow apps...")
 # here for templating purposes. Parsl apps can
 # also have "normal" variables (e.g. ram and cpu,
 # below).
-@parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['cluster1'])
-def g16_run_no_chkpt(cpu, ram, inp, gpu, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
-    return '''
-    module load gaussian
-    bn=$(basename {inp_file} .inp)
-    export GAUSS_SCRDIR=/scratch/$USER/$bn
-    mkdir -p $GAUSS_SCRDIR
-    mkdir -p {out_dir}
-    which g16
-    env
-    g16 -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < {inp_file} > {out_dir}/$bn.log
-    rm -rf $GAUSS_SCRDIR
-    '''.format(
-        run_cpu = cpu,
-        run_ram = ram,
-        gpu_opt = gpu,
-        inp_file = inp,
-	out_dir = outdir
-    )
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['cluster1'])
-def g16_run_w_chkpt(cpu, ram, gpu, inp, outdir, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
+def g16_run(cpu, ram, gpu, pre, inp, job, inputs=[], outputs=[], stdout='g16.run.stdout', stderr='g16.run.stderr'):
     return '''
     module load gaussian
     bn=$(basename {inp_file} .inp)
-    dn=$(dirname {inp_file})
     export GAUSS_SCRDIR=/scratch/$USER/$bn
     mkdir -p $GAUSS_SCRDIR
-    mkdir -p {out_dir}
+    out_dir={prefix}/$bn.{job_num}
+    mkdir -p $out_dir
+    cd {prefix}
+    cp $bn.inp $out_dir
+    cp $bn.chk $out_dir
+    cd $out_dir
     which g16
-    g16 -y=$dn/$bn.chk -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < {inp_file} > {out_dir}/$bn.log
+    g16 -y=$bn.chk -m={run_ram}GB -c="0-{run_cpu}" {gpu_opt} < $bn.inp > $bn.log
     rm -rf $GAUSS_SCRDIR
     '''.format( 
         run_cpu = cpu,
         run_ram = ram,
         gpu_opt = gpu,
+        prefix = pre,
         inp_file = inp,
-        out_dir = outdir
+        job_num = job
     )
 
 print("Done defining Parsl workflow apps.")
@@ -190,42 +175,26 @@ print("local_dir "+local_dir)
 print("remote_dir "+remote_dir)
 
 for ii, inp in enumerate(inp_file_list):
-
-    print("In loop")
-    print(inp)
-    print(ii)
-
-    # Define remote working (sub)dir for this case
-    case_dir = "case_"+str(ii)
-    print(case_dir)    
-
+    
+    print("In loop iteration "+str(ii)+" for file "+inp)
+    
     # Run simulation
     # Subtract 1 from CPU because g16 starts counting
     # at 0 instead of 1 but SLURM counts starting at 1.
-    if args['chk_if_true'] == 'True':
-        futures.append(
-            g16_run_w_chkpt(
-                cpu = (int(args['cpu']) - 1),
-	        ram = int(args['ram']),
-		gpu = gpu_opt,
-                inp = inp,
-                outdir = args['outdir'],
-                inputs = [],
-                outputs = []
-            )
+    futures.append(
+        g16_run(
+            cpu = (int(args['cpu']) - 1),
+	    ram = int(args['ram']),
+            gpu = gpu_opt,
+            pre = args['prefix'],
+            inp = inp,
+            job = args['job_number'],
+            inputs = [],
+            outputs = []
+            stdout = args['prefix']"/"+inp+"."+args['job_number']+'.stdout'
+            stderr = args['prefix']"/"+inp+"."+args['job_number']+'.stderr'
         )
-    else:
-        futures.append(
-            g16_run_no_chkpt(
-                cpu = (int(args['cpu']) - 1),
-                ram = int(args['ram']),
-                gpu = gpu_opt,
-                inp = inp,
-                outdir = args['outdir'],
-                inputs = [],
-                outputs = []
-            )
-        )
+    )
 
 # Call results for all app futures to require
 # execution to wait for all simulations to complete.
